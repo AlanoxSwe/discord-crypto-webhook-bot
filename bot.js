@@ -59,7 +59,7 @@ const sendNewCoin = async (currency, msg) => {
 };
 
 const sendPeriodicPrice = (msg) => {
-  const channel = client.channels.cache.find((chnl) => chnl.name === "bot-test");
+  const channel = client.channels.cache.find((chnl) => chnl.name === "📢crypto-alerts");
   const embed = new Discord.MessageEmbed()
       .setTitle(msg)
       .setColor(0xff9900)
