@@ -36,7 +36,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
       res.status(200).end();
       break;
     default:
-      res.status(500).end();
+      res.status(200).end();
       break;
   }
 });
