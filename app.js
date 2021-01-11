@@ -39,9 +39,9 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
       default:
         res.status(200).end();
         break;
-      res.status(200).end();
     }
   }
+  res.status(200).end();
 });
 
 module.exports = app;
