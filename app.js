@@ -18,26 +18,28 @@ client.login(DISCORD_KEY);
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
   const { type, currency, message, window } = req.body;
-  switch(type) {
-    case "percent_price":
-      if(window.includes("1 minutes")) {
-        sendPrepumpPrice(currency, message);
-      } else {
-        sendPercentPrice(currency, message);
-      }
-      res.status(200).end();
-      break;
-    case "new_coin":
-      sendNewCoin(currency, message);
-      res.status(200).end();
-      break;
-    case "periodic_price":
-      sendPeriodicPrice(message);
-      res.status(200).end();
-      break;
-    default:
-      res.status(200).end();
-      break;
+  if(!(currency.includes("DOWN") || currency.includes("UP"))) {
+    switch(type) {
+      case "percent_price":
+        if(window.includes("1 minutes")) {
+          sendPrepumpPrice(currency, message);
+        } else {
+          sendPercentPrice(currency, message);
+        }
+        res.status(200).end();
+        break;
+      case "new_coin":
+        sendNewCoin(currency, message);
+        res.status(200).end();
+        break;
+      case "periodic_price":
+        sendPeriodicPrice(message);
+        res.status(200).end();
+        break;
+      default:
+        res.status(200).end();
+        break;
+    }
   }
 });
 

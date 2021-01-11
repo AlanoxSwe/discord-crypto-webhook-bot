@@ -26,7 +26,7 @@ client.on('ready', () => {
 });
 
 const sendPercentPrice = async (currency, msg) => {
-  const logo = (currency.includes("DOWN") || currency.includes("UP")) ? 'https://s2.coinmarketcap.com/static/img/coins/64x64/5608.png' : await getLogo(currency);
+  const logo = await getLogo(currency);
   const channel = client.channels.cache.find((chnl) => chnl.name === "📢crypto-alerts");
   const embed = new Discord.MessageEmbed()
       .setTitle(`+${getPercentFromMessage(msg)}%`)
@@ -37,17 +37,15 @@ const sendPercentPrice = async (currency, msg) => {
 };
 
 const sendPrepumpPrice = async (currency, msg) => {
-  if(!(currency.includes("DOWN") || currency.includes("UP"))) {
-    const logo = await getLogo(currency);
-    const channel = client.channels.cache.find((chnl) => chnl.name === "📢crypto-alerts");
-    const embed = new Discord.MessageEmbed()
-        .setTitle(`POSSIBLE PRE-PUMP: +${getPercentFromMessage(msg)}%`)
-        .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
-        .setColor(0xff0000)
-        .setDescription(msg);
-    channel.send("@here Possible pre-pump detected:");
-    channel.send(embed);
-  }
+  const logo = await getLogo(currency);
+  const channel = client.channels.cache.find((chnl) => chnl.name === "📢crypto-alerts");
+  const embed = new Discord.MessageEmbed()
+      .setTitle(`POSSIBLE PRE-PUMP: +${getPercentFromMessage(msg)}%`)
+      .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
+      .setColor(0xff0000)
+      .setDescription(msg);
+  channel.send("@here Possible pre-pump detected:");
+  channel.send(embed);
 };
 
 const sendNewCoin = async (currency, msg) => {
