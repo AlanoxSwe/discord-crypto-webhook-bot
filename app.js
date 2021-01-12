@@ -26,22 +26,19 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
         } else {
           sendPercentPrice(currency, message);
         }
-        res.status(200).end();
         break;
       case "new_coin":
         sendNewCoin(currency, message);
-        res.status(200).end();
         break;
       case "periodic_price":
         sendPeriodicPrice(message);
-        res.status(200).end();
         break;
       default:
-        res.status(200).end();
         break;
     }
+    return res.status(200).end();
   }
-  res.status(200).end();
+  return res.status(200).end();
 });
 
 module.exports = app;
