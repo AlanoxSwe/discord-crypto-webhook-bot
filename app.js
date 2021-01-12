@@ -18,7 +18,7 @@ client.login(DISCORD_KEY);
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
   const { type, currency, message, window } = req.body;
-  if(!(currency.includes("DOWN") || currency.includes("UP"))) {
+  if(currency && !(currency.includes("DOWN") || currency.includes("UP"))) {
     switch(type) {
       case "percent_price":
         if(window.includes("1 minutes")) {
