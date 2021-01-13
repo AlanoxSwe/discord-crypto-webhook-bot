@@ -73,7 +73,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
               "🟩junior-alerts"
             );
           } else if(percent > 11) {
-            sendPrepumpAlert(
+            sendPercentPricr(
               currency,
               message,
               getPercentFromMessage(message),
@@ -87,7 +87,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
             getPercentFromMessage(message),
             "🟩junior-alerts"
           );
-          sendPrepumpPrice(
+          sendPrepumpAlert(
             currency,
             message,
             getPercentFromMessage(message),
