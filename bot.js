@@ -25,7 +25,7 @@ const sendPercentPrice = async (currency, msg, percent, group) => {
   channel.send(embed);
 };
 
-const sendPrepumpPrice = async (currency, msg, percent, group) => {
+const sendPrepumpAlert = async (currency, msg, percent, group) => {
   const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
@@ -34,6 +34,17 @@ const sendPrepumpPrice = async (currency, msg, percent, group) => {
     .setColor(0xff0000)
     .setDescription(msg);
   channel.send("@here Possible pre-pump detected:");
+  channel.send(embed);
+};
+
+const sendPrepumpPrice = async (currency, msg, percent, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  const embed = new Discord.MessageEmbed()
+    .setTitle(`POSSIBLE PRE-PUMP: +${percent}%`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
+    .setColor(0xff0000)
+    .setDescription(msg);
   channel.send(embed);
 };
 
@@ -58,5 +69,5 @@ const sendPeriodicPrice = (msg, group) => {
 };
 
 module.exports = {
-  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice
+  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice, sendPrepumpAlert
 };

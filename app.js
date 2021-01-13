@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const {
-  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice
+  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice, sendPrepumpAlert
 } = require('./bot');
 require('dotenv').config();
 
@@ -21,9 +21,9 @@ client.login(DISCORD_KEY);
   🟫crypto-alerts:
     - 10%, 30 min
   🟨sophomore-alerts:
-    - 10%, 20 min
+    - 10%, 15 min
   🟩junior-alerts:
-    - 5%, 10 min
+    - 8%, 10 min
     - 10%, 10 min
     + prepump
   🟦senior-alerts:
@@ -73,7 +73,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
               "🟩junior-alerts"
             );
           } else if(percent > 11) {
-            sendPercentPrice(
+            sendPrepumpAlert(
               currency,
               message,
               getPercentFromMessage(message),
