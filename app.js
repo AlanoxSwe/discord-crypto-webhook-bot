@@ -57,7 +57,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
             getPercentFromMessage(message),
             "🟫crypto-alerts"
           );
-        } else if (getMinutesFromWindow(window) === "20") {
+        } else if (getMinutesFromWindow(window) === "15") {
           sendPercentPrice(
             currency,
             message,
