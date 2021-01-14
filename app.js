@@ -4,11 +4,13 @@ const cors = require('cors');
 const {
   client,
   sendNewCoin,
+  sendNewCoinAlert,
   sendNewCoinReminder,
-  sendPercentPrice,
+  sendPercent,
   sendPeriodicPrice,
-  sendPrepumpPrice, 
-  sendPrepumpAlert
+  sendPrepump, 
+  sendPrepumpAlert,
+  sendPrepumpReminder,
 } = require('./bot');
 require('dotenv').config();
 
@@ -57,56 +59,47 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
     switch(type) {
       case "percent_price":
         if(getMinutesFromWindow(window) === "30") {
-          sendPercentPrice(
-            currency,
-            message,
-            getPercentFromMessage(message),
-            "🟫crypto-alerts"
-          );
+          // Freshman level
+          sendPercent(currency, message, getPercentFromMessage(message), "🟫crypto-alerts");
+          sendPercent(currency, message, getPercentFromMessage(message), "🟨sophomore-alerts");
+          sendPercent(currency, message, getPercentFromMessage(message), "🟩junior-alerts");
+          sendPercent(currency, message, getPercentFromMessage(message), "🟦senior-alerts");
         } else if (getMinutesFromWindow(window) === "15") {
-          sendPercentPrice(
-            currency,
-            message,
-            getPercentFromMessage(message),
-            "🟨sophomore-alerts"
-          );
+          // Sophomore level
+          sendPercent(currency, message, getPercentFromMessage(message), "🟨sophomore-alerts");
+          sendPercent(currency, message, getPercentFromMessage(message), "🟩junior-alerts");
+          sendPercent(currency, message, getPercentFromMessage(message), "🟦senior-alerts");
         } else if (getMinutesFromWindow(window) === "10") {
           if(percent < 11) {
-            sendPercentPrice(
-              currency,
-              message,
-              getPercentFromMessage(message),
-              "🟩junior-alerts"
-            );
+            // Junior level
+            sendPercent(currency, message, getPercentFromMessage(message), "🟩junior-alerts");
+            sendPercent(currency, message, getPercentFromMessage(message), "🟦senior-alerts");
           } else if(percent > 11) {
-            sendPercentPrice(
-              currency,
-              message,
-              getPercentFromMessage(message),
-              "🟦senior-alerts"
-            );
+            // Senior level
+            sendPercent(currency, message, getPercentFromMessage(message), "🟦senior-alerts");
           }
         } else if (getMinutesFromWindow(window) === "1") {
-          sendPrepumpPrice(
-            currency,
-            message,
-            getPercentFromMessage(message),
-            "🟩junior-alerts"
-          );
-          sendPrepumpAlert(
-            currency,
-            message,
-            getPercentFromMessage(message),
-            "🟦senior-alerts"
-          );
+          // Junior level
+          // Senior alert
+          sendPrepumpReminder("🟫crypto-alerts");
+          sendPrepumpReminder("🟨sophomore-alerts");
+          sendPrepump(currency, message, getPercentFromMessage(message), "🟩junior-alerts");
+          sendPrepumpAlert(currency, message, getPercentFromMessage(message), "🟦senior-alerts");
         }
         break;
       case "new_coin":
-        sendNewCoin(currency, message, "🟨sophomore-alerts");
+        // Sophomore level
         sendNewCoinReminder("🟫crypto-alerts");
+        sendNewCoin(currency, message, "🟨sophomore-alerts");
+        sendNewCoin(currency, message, "🟩junior-alerts");
+        sendNewCoinAlert(currency, message, "🟦senior-alerts");
         break;
       case "periodic_price":
+        // Freshman level
         sendPeriodicPrice(message, "🟫crypto-alerts");
+        sendPeriodicPrice(message, "🟨sophomore-alerts");
+        sendPeriodicPrice(message, "🟩junior-alerts");
+        sendPeriodicPrice(message, "🟦senior-alerts");
         break;
       default:
         break;
