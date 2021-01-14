@@ -2,7 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const {
-  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice, sendPrepumpAlert
+  client,
+  sendNewCoin,
+  sendNewCoinReminder,
+  sendPercentPrice,
+  sendPeriodicPrice,
+  sendPrepumpPrice, 
+  sendPrepumpAlert
 } = require('./bot');
 require('dotenv').config();
 
@@ -97,6 +103,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
         break;
       case "new_coin":
         sendNewCoin(currency, message, "🟨sophomore-alerts");
+        sendNewCoinReminder("🟫crypto-alerts");
         break;
       case "periodic_price":
         sendPeriodicPrice(message, "🟫crypto-alerts");

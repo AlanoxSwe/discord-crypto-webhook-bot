@@ -60,6 +60,17 @@ const sendNewCoin = async (currency, msg, group) => {
   channel.send(embed);
 };
 
+const sendNewCoinReminder = async (group) => {
+  const logo = `https://image.flaticon.com/icons/png/512/179/179386.png`;
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  const embed = new Discord.MessageEmbed()
+    .setTitle("New coin listing detected!")
+    .setAuthor("Hidden alert", logo)
+    .setColor(0xff5757)
+    .setDescription("Upgrade to Sophomore to see new coin listing.");
+  channel.send(embed);
+};
+
 const sendPeriodicPrice = (msg, group) => {
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
@@ -69,5 +80,11 @@ const sendPeriodicPrice = (msg, group) => {
 };
 
 module.exports = {
-  client, sendNewCoin, sendPercentPrice, sendPeriodicPrice, sendPrepumpPrice, sendPrepumpAlert
+  client,
+  sendNewCoin,
+  sendNewCoinReminder,
+  sendPercentPrice,
+  sendPeriodicPrice,
+  sendPrepumpPrice,
+  sendPrepumpAlert
 };
