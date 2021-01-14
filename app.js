@@ -73,7 +73,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
               "🟩junior-alerts"
             );
           } else if(percent > 11) {
-            sendPercentPricr(
+            sendPercentPrice(
               currency,
               message,
               getPercentFromMessage(message),
