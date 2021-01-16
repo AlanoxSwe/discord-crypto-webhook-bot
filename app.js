@@ -11,6 +11,7 @@ const {
   sendPrepump, 
   sendPrepumpAlert,
   sendPrepumpReminder,
+  sendRoutineCommands
 } = require('./bot');
 require('dotenv').config();
 
@@ -107,6 +108,11 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
     return res.status(200).end();
   }
   return res.status(200).end();
+});
+
+app.get('/uptime', (req, res) => {
+  sendRoutineCommands('🛑sandbox🛑');
+  res.status(200).end();
 });
 
 module.exports = app;

@@ -50,7 +50,6 @@ const sendNewCoin = async (currency, msg, group) => {
   channel.send(embed);
 };
 
-
 const sendPeriodicPrice = (msg, group) => {
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
@@ -109,6 +108,12 @@ const sendPrepumpReminder = async (group) => {
   channel.send(embed);
 };
 
+const sendRoutineCommands = async (group) => {
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  channel.send('!d bump');
+  channel.send('!refreshRanks all');
+};
+
 module.exports = {
   client,
   sendNewCoin,
@@ -119,4 +124,5 @@ module.exports = {
   sendPrepump,
   sendPrepumpAlert,
   sendPrepumpReminder,
+  sendRoutineCommands
 };
