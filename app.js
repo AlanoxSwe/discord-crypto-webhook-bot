@@ -54,7 +54,9 @@ client.login(DISCORD_KEY);
 // };
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
-  const body = JSON.parse(JSON.stringify(req.body));
+  const str = JSON.stringify(req.body);
+  const sliced = str.slice(2, str.length - 6);
+  const body = JSON.parse(sliced);
   console.log(body);
   const { type, window, window_unit, prepump } = body;
   if(type === "new_coin") {
