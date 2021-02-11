@@ -1,7 +1,10 @@
 /* eslint-disable no-console */
 const Discord = require('discord.js');
 const Axios = require('axios');
+const sharp = require("sharp")
 require('dotenv').config();
+
+const { NOMICS_KEY } = process.env;
 
 const client = new Discord.Client();
 
@@ -11,48 +14,39 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-const unit = ({ window_unit }) => {
-  if(window_unit === 'h') return 'hour';
-  if(window_unit === 'm') return 'minutes';
-  if(window_unit === 's') return 'seconds';
-}
-
 // Notices
 
-const sendPercent = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.pair}/64x64`;
+const sendPercent = async (currency, msg, percent, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`+${data.pc_chng}% in *${data.window} ${unit(data)}*`)
-    .setAuthor(data.pair, logo, `https://www.binance.com/en/trade/${data.pair}_BTC`)
+    .setTitle(`+${percent}%`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
     .setColor(0x00ff00)
-    .setDescription(`**${data.pair}** went from **${data.previous_price} BTC** to **${data.price} BTC** within **${data.window} ${unit(data)}**
-    Volume: **+${data.vol_chng}%**`);
+    .setDescription(msg);
   channel.send(embed);
 };
 
-const sendPrepump = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.pair}/64x64`;
+const sendPrepump = async (currency, msg, percent, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`POSSIBLE PRE-PUMP: +${data.pc_chng}% in *${data.window} ${unit(data)}*`)
-    .setAuthor(data.pair, logo, `https://www.binance.com/en/trade/${data.pair}_BTC`)
+    .setTitle(`POSSIBLE PRE-PUMP: +${percent}%`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
     .setColor(0xff0000)
-    .setFooter("Upgrade to Senior to see who pre-pumped this coin")
-    .setDescription(`**${data.pair}** went from **${data.previous_price} BTC** to **${data.price} BTC** within **${data.window} ${unit(data)}**
-    Volume: **+${data.vol_chng}%**`);
+    .setDescription(msg);
   channel.send(embed);
 };
 
-const sendNewCoin = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.currency}/64x64`;
+const sendNewCoin = async (currency, msg, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle("Newly listed!")
-    .setAuthor(data.currency, logo, `https://www.binance.com/en/trade/${data.currency}_BTC`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
     .setColor(0xffff00)
     .setFooter("Upgrade to Senior to receive a notification when this happens")
-    .setDescription(data.message);
+    .setDescription(msg);
   channel.send(embed);
 };
 
@@ -66,28 +60,26 @@ const sendPeriodicPrice = (msg, group) => {
 
 // Alerts
 
-const sendNewCoinAlert = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.currency}/64x64`;
+const sendNewCoinAlert = async (currency, msg, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle("Newly listed!")
-    .setAuthor(data.currency, logo, `https://www.binance.com/en/trade/${data.currency}_BTC`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
     .setColor(0xffff00)
-    .setDescription(data.message);
+    .setDescription(msg);
   channel.send("@here New coin listing:");
   channel.send(embed);
 };
 
-const sendPrepumpAlert = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.pair}/64x64`;
+const sendPrepumpAlert = async (currency, msg, percent, group) => {
+  const logo = `https://icons.bitbot.tools/api/${currency}/64x64`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`POSSIBLE PRE-PUMP: +${data.pc_chng}% in *${data.window} ${unit(data)}*`)
-    .setAuthor(data.pair, logo, `https://www.binance.com/en/trade/${data.pair}_BTC`)
+    .setTitle(`POSSIBLE PRE-PUMP: +${percent}%`)
+    .setAuthor(currency, logo, `https://www.binance.com/en/trade/${currency}_BTC`)
     .setColor(0xff0000)
-    .setFooter(data.prepumpName ? `Possibly pre-pumped by: ${data.prepumpName}`: '')
-    .setDescription(`**${data.pair}** went from **${data.previous_price} BTC** to **${data.price} BTC** within **${data.window} ${unit(data)}**
-    Volume: **+${data.vol_chng}%**`);
+    .setDescription(msg);
   channel.send("@here Possible pre-pump detected:");
   channel.send(embed);
 };
@@ -116,15 +108,10 @@ const sendPrepumpReminder = async (group) => {
   channel.send(embed);
 };
 
-const sendPrepumpReminderJunior = async (window, group) => {
-  const logo = `https://image.flaticon.com/icons/png/512/179/179386.png`;
+const sendRoutineCommands = async (group) => {
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
-  const embed = new Discord.MessageEmbed()
-    .setTitle(`New possible pre-pump within ${window} seconds detected!`)
-    .setAuthor("Hidden alert", logo)
-    .setColor(0xff5757)
-    .setDescription("Upgrade to Senior to see the pre-pumped coin.");
-  channel.send(embed);
+  channel.send('!d bump');
+  channel.send('!refreshRanks all');
 };
 
 module.exports = {
@@ -137,5 +124,5 @@ module.exports = {
   sendPrepump,
   sendPrepumpAlert,
   sendPrepumpReminder,
-  sendPrepumpReminderJunior,
+  sendRoutineCommands
 };
