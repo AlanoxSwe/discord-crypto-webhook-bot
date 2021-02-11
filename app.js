@@ -54,45 +54,46 @@ client.login(DISCORD_KEY);
 // };
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
-  const { type, window, window_unit, prepump } = req.body;
-  console.log(req.body);
+  const body = JSON.parse(JSON.stringify(req.body));
+  console.log(body);
+  const { type, window, window_unit, prepump } = body;
   if(type === "new_coin") {
     sendNewCoinReminder("🟫freshman-alerts");
-    sendNewCoin(req.body, "🟨sophomore-alerts");
-    sendNewCoin(req.body, "🟩junior-alerts");
-    sendNewCoinAlert(req.body, "🟧senior-alerts");
+    sendNewCoin(body, "🟨sophomore-alerts");
+    sendNewCoin(body, "🟩junior-alerts");
+    sendNewCoinAlert(body, "🟧senior-alerts");
   }else{
     if(window_unit === "h" && window === 1) {
-      sendPercent(req.body, "🟫freshman-alerts");
-      sendPercent(req.body, "🟨sophomore-alerts");
-      sendPercent(req.body, "🟩junior-alerts");
-      sendPercent(req.body, "🟧senior-alerts");
+      sendPercent(body, "🟫freshman-alerts");
+      sendPercent(body, "🟨sophomore-alerts");
+      sendPercent(body, "🟩junior-alerts");
+      sendPercent(body, "🟧senior-alerts");
     } else if(window_unit === "m") {
       if(window >= 20 && window <= 40) {
-        sendPercent(req.body, "🟫freshman-alerts");
-        sendPercent(req.body, "🟨sophomore-alerts");
-        sendPercent(req.body, "🟩junior-alerts");
-        sendPercent(req.body, "🟧senior-alerts");
+        sendPercent(body, "🟫freshman-alerts");
+        sendPercent(body, "🟨sophomore-alerts");
+        sendPercent(body, "🟩junior-alerts");
+        sendPercent(body, "🟧senior-alerts");
       } else if(window >= 4 && window <= 10) {
-        sendPercent(req.body, "🟨sophomore-alerts");
-        sendPercent(req.body, "🟩junior-alerts");
-        sendPercent(req.body, "🟧senior-alerts");
+        sendPercent(body, "🟨sophomore-alerts");
+        sendPercent(body, "🟩junior-alerts");
+        sendPercent(body, "🟧senior-alerts");
       } else if(window >= 1 && window <= 3) {
         if(prepump) {
           sendPrepumpReminder("🟫freshman-alerts");
           sendPrepumpReminder("🟨sophomore-alerts");
-          sendPrepump(req.body, "🟩junior-alerts");
-          sendPrepumpAlert(req.body, "🟧senior-alerts");
+          sendPrepump(body, "🟩junior-alerts");
+          sendPrepumpAlert(body, "🟧senior-alerts");
         } else {
-          sendPercent(req.body, "🟩junior-alerts");
-          sendPercent(req.body, "🟧senior-alerts");
+          sendPercent(body, "🟩junior-alerts");
+          sendPercent(body, "🟧senior-alerts");
         }
       }
     } else if(window_unit === "s") {
       sendPrepumpReminder("🟫freshman-alerts");
       sendPrepumpReminder("🟨sophomore-alerts");
-      sendPrepumpReminderJunior(req.body.window, "🟩junior-alerts");
-      sendPrepumpAlert(req.body, "🟧senior-alerts");
+      sendPrepumpReminderJunior(body.window, "🟩junior-alerts");
+      sendPrepumpAlert(body, "🟧senior-alerts");
     }
   }
   return res.status(200).end();
