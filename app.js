@@ -55,6 +55,7 @@ client.login(DISCORD_KEY);
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
   const { type, window, window_unit, prepump } = req.body;
+  console.log(req.body);
   if(type === "new_coin") {
     sendNewCoinReminder("🟫freshman-alerts");
     sendNewCoin(req.body, "🟨sophomore-alerts");
