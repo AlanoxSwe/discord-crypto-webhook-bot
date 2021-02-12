@@ -54,48 +54,48 @@ client.login(DISCORD_KEY);
 // };
 
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
-  const str = JSON.stringify(req.body);
-  const sliced = str.slice(2, str.length - 6);
-  const body = JSON.parse(sliced);
-  console.log(body);
-  const { type, window, window_unit, prepump } = body;
+  // const str = JSON.stringify(req.body);
+  // const sliced = str.slice(2, str.length - 6);
+  // const body = JSON.parse(sliced);
+  console.log(req.body);
+  const { type, window, window_unit, prepump } = req.body;
   if(type === "new_coin") {
     sendNewCoinReminder("🟫freshman-alerts");
-    sendNewCoin(body, "🟨sophomore-alerts");
-    sendNewCoin(body, "🟩junior-alerts");
-    sendNewCoinAlert(body, "🟧senior-alerts");
+    sendNewCoin(req.body, "🟨sophomore-alerts");
+    sendNewCoin(req.body, "🟩junior-alerts");
+    sendNewCoinAlert(req.body, "🟧senior-alerts");
   }else{
     if(window_unit === "h" && window === 1) {
-      sendPercent(body, "🟫freshman-alerts");
-      sendPercent(body, "🟨sophomore-alerts");
-      sendPercent(body, "🟩junior-alerts");
-      sendPercent(body, "🟧senior-alerts");
+      sendPercent(req.body, "🟫freshman-alerts");
+      sendPercent(req.body, "🟨sophomore-alerts");
+      sendPercent(req.body, "🟩junior-alerts");
+      sendPercent(req.body, "🟧senior-alerts");
     } else if(window_unit === "m") {
       if(window >= 20 && window <= 40) {
-        sendPercent(body, "🟫freshman-alerts");
-        sendPercent(body, "🟨sophomore-alerts");
-        sendPercent(body, "🟩junior-alerts");
-        sendPercent(body, "🟧senior-alerts");
+        sendPercent(req.body, "🟫freshman-alerts");
+        sendPercent(req.body, "🟨sophomore-alerts");
+        sendPercent(req.body, "🟩junior-alerts");
+        sendPercent(req.body, "🟧senior-alerts");
       } else if(window >= 4 && window <= 10) {
-        sendPercent(body, "🟨sophomore-alerts");
-        sendPercent(body, "🟩junior-alerts");
-        sendPercent(body, "🟧senior-alerts");
+        sendPercent(req.body, "🟨sophomore-alerts");
+        sendPercent(req.body, "🟩junior-alerts");
+        sendPercent(req.body, "🟧senior-alerts");
       } else if(window >= 1 && window <= 3) {
         if(prepump) {
           sendPrepumpReminder("🟫freshman-alerts");
           sendPrepumpReminder("🟨sophomore-alerts");
-          sendPrepump(body, "🟩junior-alerts");
-          sendPrepumpAlert(body, "🟧senior-alerts");
+          sendPrepump(req.body, "🟩junior-alerts");
+          sendPrepumpAlert(req.body, "🟧senior-alerts");
         } else {
-          sendPercent(body, "🟩junior-alerts");
-          sendPercent(body, "🟧senior-alerts");
+          sendPercent(req.body, "🟩junior-alerts");
+          sendPercent(req.body, "🟧senior-alerts");
         }
       }
     } else if(window_unit === "s") {
       sendPrepumpReminder("🟫freshman-alerts");
       sendPrepumpReminder("🟨sophomore-alerts");
-      sendPrepumpReminderJunior(body.window, "🟩junior-alerts");
-      sendPrepumpAlert(body, "🟧senior-alerts");
+      sendPrepumpReminderJunior(req.body.window, "🟩junior-alerts");
+      sendPrepumpAlert(req.body, "🟧senior-alerts");
     }
   }
   return res.status(200).end();
@@ -103,7 +103,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
 
 
 // app.post(`/${WEBHOOK_URL}1`, (req, res) => {
-//   const { type, currency, message, window, percent } = req.body;
+//   const { type, currency, message, window, percent } = req.req.body;
 //   if(currency && !(currency.includes("DOWN") || currency.includes("UP"))) {
 //     switch(type) {
 //       case "percent_price":
