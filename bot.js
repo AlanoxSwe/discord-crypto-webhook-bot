@@ -74,7 +74,7 @@ const sendNewCoinAlert = async (data, group) => {
     .setAuthor(data.currency, logo, `https://www.binance.com/en/trade/${data.currency}_BTC`)
     .setColor(0xffff00)
     .setDescription(data.message);
-  channel.send("@here New coin listing:");
+  channel.send("<@&820295659625906236> New coin listing:");
   channel.send(embed);
 };
 
