@@ -88,7 +88,7 @@ const sendPrepumpAlert = async (data, group) => {
     .setFooter(data.prepumpName ? `Possibly pre-pumped by: ${data.prepumpName}`: '')
     .setDescription(`**${data.pair}** went from **${data.previous_price} BTC** to **${data.price} BTC** within **${data.window} ${unit(data)}**
     Volume: **+${data.vol_chng}%**`);
-  channel.send("@here Possible pre-pump detected:");
+  channel.send("<@&820295659625906236> Possible pre-pump detected:");
   channel.send(embed);
 };
 
