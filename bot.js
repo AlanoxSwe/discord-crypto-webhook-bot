@@ -1,8 +1,12 @@
 /* eslint-disable no-console */
 const Discord = require('discord.js');
 const Axios = require('axios');
+const Jimp = require("jimp");
+const qs = require("qs");
 require('dotenv').config();
 
+const { IMGBB_KEY } = process.env;
+const jreadAsync = Jimp.read;
 const client = new Discord.Client();
 
 // Bot Methods
@@ -15,6 +19,44 @@ const unit = ({ window_unit }) => {
   if(window_unit === 'h') return 'hour';
   if(window_unit === 'm') return 'minutes';
   if(window_unit === 's') return 'seconds';
+};
+
+const makeBase64 = async (image) => {
+  let data;
+  await image.getBase64(Jimp.AUTO, (err, res) => data = res);
+  return await data.split(',').pop();
+};
+
+const upload = async (image) => {
+  const options = {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: qs.stringify({'image': image}),
+    url: `https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`
+  }
+  try {
+    const res = await Axios(options)
+    return res.data.data.image.url
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const mergeImages = async (coin1, coin2) => {
+    try {
+    const image1 = await jreadAsync(`https://icons.bitbot.tools/api/${coin1}/64x64`)
+    const image2 = await jreadAsync(`https://icons.bitbot.tools/api/${coin2}/64x64`)
+
+    image1.scan(0, 0, image1.bitmap.width, image1.bitmap.height, (x, y, idx) => {
+      if ((image1.bitmap.width - x) > y) {
+          return;
+      }
+      image1.setPixelColor(image2.getPixelColor(x, y), x, y);
+    })
+    return await upload(await makeBase64(image1))
+  }catch (err) {
+    return `https://icons.bitbot.tools/api/${coin2}/64x64`
+  }
 }
 
 // Notices
@@ -127,6 +169,34 @@ const sendPrepumpReminderJunior = async (window, group) => {
   channel.send(embed);
 };
 
+// Signals
+
+const sendSignal = async (data, group) => {
+  const logo = await mergeImages(data.coin, data.pair);
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  const embed = new Discord.MessageEmbed()
+    .setTitle(`New signal for ${data.coin}`)
+    .setAuthor(`${data.coin}/${data.pair}`, logo)
+    .setColor(0xd5d5d5)
+    .setDescription(`**Buy Zone:** ${data.buyZone}
+    **Sell Zone:** ${data.sellZone}
+    **Stop Loss:** ${data.stopLoss}
+    
+    ${data.notes}
+    `);
+  channel.send(embed);
+};
+
+const sendHitSignal = async (data, group) => {
+  const logo = "https://i.ibb.co/tXQfNqp/iconmonstr-check-mark-4-240.png";
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  const embed = new Discord.MessageEmbed()
+    .setTitle(`${data.coin} Signal Hit!`)
+    .setAuthor(`${data.coin}/${data.pair}`, logo)
+    .setColor(0x1ee331)
+  channel.send(embed);
+};
+
 module.exports = {
   client,
   sendNewCoin,
@@ -138,4 +208,6 @@ module.exports = {
   sendPrepumpAlert,
   sendPrepumpReminder,
   sendPrepumpReminderJunior,
+  sendSignal,
+  sendHitSignal,
 };

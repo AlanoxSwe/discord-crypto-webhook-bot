@@ -12,10 +12,12 @@ const {
   sendPrepumpAlert,
   sendPrepumpReminder,
   sendPrepumpReminderJunior,
+  sendSignal,
+  sendHitSignal,
 } = require('./bot');
 require('dotenv').config();
 
-const { DISCORD_KEY, WEBHOOK_URL } = process.env;
+const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL } = process.env;
 
 const app = express();
 
@@ -53,8 +55,19 @@ client.login(DISCORD_KEY);
 //   return match ? match : null;
 // };
 
+app.post(`/${SIGNAL_URL}`, (req, res) => {
+  const { hit } = req.body;
+
+  if (hit) {
+    sendHitSignal(req.body, "🍻signal-bar");
+  } else {
+    sendSignal(req.body, "🍻signal-bar");
+  }
+
+  return res.status(200).end();
+});
+
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
-  console.log(req.body);
   const { type, window, window_unit, prepump } = req.body;
   if(type === "new_coin") {
     sendNewCoinReminder("🟫freshman-alerts");
