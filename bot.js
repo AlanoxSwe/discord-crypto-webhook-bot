@@ -175,7 +175,7 @@ const sendSignal = async (data, group) => {
   const logo = await mergeImages(data.coin, data.pair);
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`New signal for ${data.coin}`)
+    .setTitle(`New Signal for $${data.coin}`)
     .setAuthor(`${data.coin}/${data.pair}`, logo)
     .setColor(0xd5d5d5)
     .setFooter("⚠️ WARNING: Do your own research. We cannot guarantee anything and are not responsible for any losses.")
