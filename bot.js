@@ -178,12 +178,9 @@ const sendSignal = async (data, group) => {
     .setTitle(`New signal for ${data.coin}`)
     .setAuthor(`${data.coin}/${data.pair}`, logo)
     .setColor(0xd5d5d5)
-    .setDescription(`**Buy Zone:** ${data.buyZone}
-    **Sell Zone:** ${data.sellZone}
-    **Stop Loss:** ${data.stopLoss}
-    
-    ${data.notes}
-    `);
+    .setFooter(":warning: **WARNING:** Do your own research. We cannot guarantee anything and are not responsible for any losses.")
+    .setDescription(`**Buy Zone:** ${data.buyZone}\n**Sell Zone:** ${data.sellZone}${data.stopLoss && `\n**Stop Loss:** ${data.stopLoss}`}\n\n${data.notes}`);
+  channel.send("<@&823279813945983046>");
   channel.send(embed);
 };
 
@@ -194,6 +191,7 @@ const sendHitSignal = async (data, group) => {
     .setTitle(`${data.coin} Signal Hit!`)
     .setAuthor(`${data.coin}/${data.pair}`, logo)
     .setColor(0x1ee331)
+  channel.send("<@&823279813945983046>");
   channel.send(embed);
 };
 
