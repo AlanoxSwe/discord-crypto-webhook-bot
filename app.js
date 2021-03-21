@@ -67,6 +67,18 @@ app.post(`/${SIGNAL_URL}`, (req, res) => {
   return res.status(200).end();
 });
 
+app.post(`/signal-bar-test`, (req, res) => {
+  const { hit } = req.body;
+
+  if (hit) {
+    sendHitSignal(req.body, "💲chad-ching");
+  } else {
+    sendSignal(req.body, "💲chad-ching");
+  }
+
+  return res.status(200).end();
+});
+
 app.post(`/${WEBHOOK_URL}`, (req, res) => {
   const { type, window, window_unit, prepump } = req.body;
   if(type === "new_coin") {
