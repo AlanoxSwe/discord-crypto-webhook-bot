@@ -98,26 +98,24 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
         sendPercent(req.body, "🟨sophomore-alerts");
         sendPercent(req.body, "🟩junior-alerts");
         sendPercent(req.body, "🟧senior-alerts");
-      } else if(window >= 4 && window <= 10) {
+      } else if(window >= 4 && window <= 19) {
         sendPercent(req.body, "🟨sophomore-alerts");
         sendPercent(req.body, "🟩junior-alerts");
         sendPercent(req.body, "🟧senior-alerts");
       } else if(window >= 1 && window <= 3) {
-        if(prepump) {
-          sendPrepumpReminder("🟫freshman-alerts");
-          sendPrepumpReminder("🟨sophomore-alerts");
-          sendPrepump(req.body, "🟩junior-alerts");
-          sendPrepumpAlert(req.body, "🟧senior-alerts");
-        } else {
-          sendPercent(req.body, "🟩junior-alerts");
-          sendPercent(req.body, "🟧senior-alerts");
-        }
+        sendPercent(req.body, "🟩junior-alerts");
+        sendPercent(req.body, "🟧senior-alerts");
       }
     } else if(window_unit === "s") {
-      sendPrepumpReminder("🟫freshman-alerts");
-      sendPrepumpReminder("🟨sophomore-alerts");
-      sendPrepumpReminderJunior(req.body.window, "🟩junior-alerts");
-      sendPrepumpAlert(req.body, "🟧senior-alerts");
+      if(prepump) {
+        sendPrepumpReminder("🟫freshman-alerts");
+        sendPrepumpReminder("🟨sophomore-alerts");
+        sendPrepump(req.body, "🟩junior-alerts");
+        sendPrepumpAlert(req.body, "🟧senior-alerts");
+      } else {
+        sendPercent(req.body, "🟩junior-alerts");
+        sendPercent(req.body, "🟧senior-alerts");
+      }
     }
   }
   return res.status(200).end();
