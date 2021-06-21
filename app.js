@@ -14,6 +14,7 @@ const {
   sendPrepumpReminderJunior,
   sendSignal,
   sendHitSignal,
+  sendDumpAlert,
 } = require('./bot');
 require('dotenv').config();
 
@@ -86,6 +87,8 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
     sendNewCoin(req.body, "🟨sophomore-alerts");
     sendNewCoin(req.body, "🟩junior-alerts");
     sendNewCoinAlert(req.body, "🟧senior-alerts");
+  }else if(type === "BTC_DIP") {
+    sendDumpAlert(req.body, "🔻btc-dump")
   }else{
     if(window_unit === "h" && window === 1) {
       sendPercent(req.body, "🟫freshman-alerts");
