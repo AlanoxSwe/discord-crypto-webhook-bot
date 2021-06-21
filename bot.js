@@ -146,7 +146,7 @@ const sendDumpAlert = async (data, group) => {
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle(`BTC dropped ${data.pc_chng}% in *${data.window} ${unit(data)}*`)
-    .setAuthor(`Bitcoin Dump`)
+    .setAuthor(`Bitcoin Dump`, logo)
     .setColor(0xff0000)
     .setFooter(data.prepumpName ? `Possibly pre-pumped by: ${data.prepumpName}`: '')
     .setDescription(`**BTC** went from **${data.price_previous} USD** to **${data.price} USD** within **${data.window} ${unit(data)}**`);
