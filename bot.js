@@ -148,7 +148,7 @@ const sendDumpAlert = async (data, group) => {
     .setTitle(`BTC dropped ${data.pc_chng}% in *${data.window} ${unit(data)}*`)
     .setAuthor(`Bitcoin Dump`, logo)
     .setColor(0xff0000)
-    .setFooter(data.prepumpName ? `Possibly pre-pumped by: ${data.prepumpName}`: '')
+    .setFooter("Read the pinned post how this dump can be useful for trades.")
     .setDescription(`**BTC** went from **${data.price_previous} USD** to **${data.price} USD** within **${data.window} ${unit(data)}**`);
   channel.send("<@&856499721705881621> BTC Dump detected:");
   channel.send(embed);
