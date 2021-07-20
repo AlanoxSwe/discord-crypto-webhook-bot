@@ -154,6 +154,29 @@ const sendDumpAlert = async (data, group) => {
   channel.send(embed);
 };
 
+const sendFuturesCreate = async (data, group) => {
+  const coinSplit = data.coin.split('/');
+  const coin = coinSplit[0];
+  const pair = coinSplit[1];
+
+  const logo = `https://icons.bitbot.tools/api/${coin}/64x64`;
+  const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  const embed = new Discord.MessageEmbed()
+    .setTitle(`New Futures signal: ${coin}/${pair}`)
+    .setAuthor(`${coin}/${pair}`, logo)
+    .setColor(0x00ff00)
+    .setFooter("⚠️ WARNING: Do your own research. We cannot guarantee anything and are not responsible for any losses.")
+    .setDescription(`> **Method:** \`${data.method}\`\n
+      > **Entry:** \`${data.entry}\`\n
+      > **Target:** \`${data.target}\`\n
+      > **Leverage:** \`${data.leverage}\`\n
+      > **Stop Loss:** \`${data.stoploss}\`\n
+      \n${data.notes_description}
+    `);
+  channel.send("<@&823279813945983046>");
+  channel.send(embed);
+};
+
 // Upgrade Reminders
 
 const sendNewCoinReminder = async (group) => {
@@ -229,4 +252,5 @@ module.exports = {
   sendSignal,
   sendHitSignal,
   sendDumpAlert,
+  sendFuturesCreate,
 };

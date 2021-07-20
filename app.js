@@ -44,18 +44,6 @@ client.login(DISCORD_KEY);
 
 */
 
-// const getPercentFromMessage = (msg) => {
-//   const regex = /[0-9]+(.[0-9])+/i;
-//   const match = msg.match(regex)[0];
-//   return match ? match : null;
-// };
-
-// const getMinutesFromWindow = (window) => {
-//   const regex = /\d+/;
-//   const match = window.match(regex)[0];
-//   return match ? match : null;
-// };
-
 app.post(`/${SIGNAL_URL}`, (req, res) => {
   const { hit } = req.body;
 
@@ -120,6 +108,20 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
         sendPercent(req.body, "🟧senior-alerts");
       }
     }
+  }
+  return res.status(200).end();
+});
+
+app.post(`/${FUTURES_URL}`, (req, res) => {
+  const { type } = req.body;
+  if(type === "create") {
+    sendFuturesCreate("futures-bot-test");
+  }else if(type === "cancel") {
+    // sendDumpAlert(req.body, "🔻btc-dump")
+  }else if(type === "hit") {
+    // sendDumpAlert(req.body, "🔻btc-dump")
+  }else if(type === "alert") {
+    // sendDumpAlert(req.body, "🔻btc-dump")
   }
   return res.status(200).end();
 });
