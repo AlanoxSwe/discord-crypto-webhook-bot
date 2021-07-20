@@ -114,7 +114,7 @@ app.post(`/${WEBHOOK_URL}`, (req, res) => {
 app.post(`/${FUTURES_URL}`, (req, res) => {
   const { type } = req.body;
   if(type === "create") {
-    sendFuturesCreate("futures-bot-test");
+    sendFuturesCreate(req.body, "futures-bot-test");
   }else if(type === "cancel") {
     // sendDumpAlert(req.body, "🔻btc-dump")
   }else if(type === "hit") {
