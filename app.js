@@ -7,18 +7,17 @@ const {
   sendNewCoinAlert,
   sendNewCoinReminder,
   sendPercent,
-  sendPeriodicPrice,
   sendPrepump, 
   sendPrepumpAlert,
   sendPrepumpReminder,
-  sendPrepumpReminderJunior,
   sendSignal,
   sendHitSignal,
   sendDumpAlert,
+  sendFuturesCreate,
 } = require('./bot');
 require('dotenv').config();
 
-const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL } = process.env;
+const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL, FUTURES_URL } = process.env;
 
 const app = express();
 
