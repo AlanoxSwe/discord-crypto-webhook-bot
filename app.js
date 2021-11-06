@@ -18,7 +18,7 @@ const {
 } = require('./bot');
 require('dotenv').config();
 
-const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL } = process.env;
+const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL, SIGNAL_BAR_SIG, SIGNAL_BAR_UPD } = process.env;
 
 const app = express();
 
@@ -56,26 +56,26 @@ client.login(DISCORD_KEY);
 //   return match ? match : null;
 // };
 
-app.post(`/${SIGNAL_URL}`, (req, res) => {
-  const { hit } = req.body;
+// app.post(`/${SIGNAL_URL}`, (req, res) => {
+//   const { hit } = req.body;
 
-  if (hit) {
-    sendHitSignal(req.body, "🍻signal-bar");
-  } else {
-    sendSignal(req.body, "🍻signal-bar");
-  }
+//   if (hit) {
+//     sendHitSignal(req.body, "🍻signal-bar");
+//   } else {
+//     sendSignal(req.body, "🍻signal-bar");
+//   }
+
+//   return res.status(200).end();
+// });
+
+app.post(`/${SIGNAL_BAR_SIG}`, (req, res) => {
+  sendSignal(req.body, "🍻signal-bar");
 
   return res.status(200).end();
 });
 
-app.post(`/signal-bar-test`, (req, res) => {
-  const { hit } = req.body;
-
-  if (hit) {
-    sendHitSignal(req.body, "💲chad-ching");
-  } else {
-    sendSignal(req.body, "💲chad-ching");
-  }
+app.post(`/${SIGNAL_BAR_UPD}`, (req, res) => {
+  sendHitSignal(req.body, "🍻signal-bar");
 
   return res.status(200).end();
 });

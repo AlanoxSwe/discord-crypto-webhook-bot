@@ -44,8 +44,8 @@ const upload = async (image) => {
 
 const mergeImages = async (coin1, coin2) => {
     try {
-    const image1 = await jreadAsync(`https://icons.bitbot.tools/api/${coin1}/64x64`)
-    const image2 = await jreadAsync(`https://icons.bitbot.tools/api/${coin2}/64x64`)
+    const image1 = await jreadAsync(`https://agile-beyond-19073.herokuapp.com/${coin1}`)
+    const image2 = await jreadAsync(`https://agile-beyond-19073.herokuapp.com/${coin2}`)
 
     image1.scan(0, 0, image1.bitmap.width, image1.bitmap.height, (x, y, idx) => {
       if ((image1.bitmap.width - x) > y) {
@@ -55,7 +55,20 @@ const mergeImages = async (coin1, coin2) => {
     })
     return await upload(await makeBase64(image1))
   }catch (err) {
-    return `https://icons.bitbot.tools/api/${coin2}/64x64`
+    return `https://agile-beyond-19073.herokuapp.com/${coin1}`
+  }
+}
+
+const renderRisk = (risk) => {
+  switch (risk) {
+    case 'low':
+      return '<:risk1:906610633242443817>'
+    case 'medium':
+      return '<:risk2:906610645519171654>'
+    case 'high':
+      return '<:risk3:906610657355526225>'
+    default:
+      return risk
   }
 }
 
@@ -192,27 +205,35 @@ const sendPrepumpReminderJunior = async (window, group) => {
 // Signals
 
 const sendSignal = async (data, group) => {
-  const logo = await mergeImages(data.coin, data.pair);
+  const logo = await mergeImages(data.crypto_ticker, data.pair);
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`New Signal for $${data.coin}`)
-    .setAuthor(`${data.coin}/${data.pair}`, logo)
+    .setTitle(`New Signal for $${data.crypto_ticker} (${data.full_crypto_name})`)
+    .setAuthor(`${data.crypto_ticker}/${data.pair}`, logo)
     .setColor(0xd5d5d5)
-    .setFooter("⚠️ WARNING: Do your own research. We cannot guarantee anything and are not responsible for any losses.")
-    .setDescription(`> **Buy Zone:** \`${data.buyZone}\`\n> **Sell Zone:** \`${data.sellZone}\`${data.stopLoss ? `\n> **Stop Loss:** \`${data.stopLoss}\`` : ''}${data.notes ? `\n\n${data.notes}`: ''}`);
+    .setFooter("⚠️ WARNING: Do your own research.\nWe cannot guarantee anything and are not responsible for any losses.")
+    .addField('Signal Pair:', `${data.crypto_ticker}/${data.pair}`, true)
+    .addField('Risk:', renderRisk(data.risk), true)
+    .addField('💸 Buy Zone:', `\`< ${data.buy_zone}\``)
+    .addField('🎯 Targets:', data.targets.map((target, index) => `**${index + 1}:\t\t**\`${target}\``))
   channel.send("<@&823279813945983046>");
-  channel.send(embed);
+  setTimeout(() => {
+    channel.send(embed);
+  }, 100)
 };
 
 const sendHitSignal = async (data, group) => {
-  const logo = "https://i.ibb.co/tXQfNqp/iconmonstr-check-mark-4-240.png";
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.crypto_ticker}`
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
-    .setTitle(`${data.coin} Signal Hit!`)
-    .setAuthor(`${data.coin}/${data.pair}`, logo)
+    .setTitle(`✅ Target ${data.target_number} for $${data.crypto_ticker} hit!`)
+    .setAuthor(`${data.crypto_ticker}`, logo)
     .setColor(0x1ee331)
+    .addField('Current Profit:', `${data.percentage_profit}%`, true)
   channel.send("<@&823279813945983046>");
-  channel.send(embed);
+  setTimeout(() => {
+    channel.send(embed);
+  }, 100)
 };
 
 module.exports = {
