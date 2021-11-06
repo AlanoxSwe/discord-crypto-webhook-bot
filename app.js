@@ -69,13 +69,15 @@ client.login(DISCORD_KEY);
 // });
 
 app.post(`/${SIGNAL_BAR_SIG}`, (req, res) => {
-  sendSignal(req.body, "🍻signal-bar");
+  // sendSignal(req.body, "🍻signal-bar");
+  console.log(req.body)
 
   return res.status(200).end();
 });
 
 app.post(`/${SIGNAL_BAR_UPD}`, (req, res) => {
-  sendHitSignal(req.body, "🍻signal-bar");
+  // sendHitSignal(req.body, "🍻signal-bar");
+  console.log(req.body)
 
   return res.status(200).end();
 });
