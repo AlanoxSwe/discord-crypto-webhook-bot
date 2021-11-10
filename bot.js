@@ -73,6 +73,21 @@ const renderRisk = (risk) => {
   }
 }
 
+const renderHitTarget = (targetIndex) => {
+  switch (targetIndex) {
+    case 1:
+      return ':one:'
+    case 2:
+      return ':two:'
+    case 3:
+      return ':three:'
+    case 4:
+      return ':four:'
+    default:
+      return targetIndex
+  }
+}
+
 const slowSend = (channel, embed) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -225,7 +240,8 @@ const sendSignal = async (data, group) => {
     .addField('Signal Pair:', `${data.crypto_ticker}/${data.pair}`, true)
     .addField('Risk:', renderRisk(data.risk), true)
     .addField('💸 Buy Zone:', `\`< ${data.buy_zone}\``)
-    .addField('🎯 Targets:', data.targets.map((target, index) => `**${index + 1}:\t\t**\`${target}\``))
+    .addField('🎯 Targets:', data.targets.map((target, index) =>
+      `${renderHitTarget(index+1)} \`${target}\``))
   channel.send("<@&823279813945983046>");
   const sent = await slowSend(channel, embed)
   return sent.id
