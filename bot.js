@@ -252,7 +252,7 @@ const sendHitSignal = async (data, group) => {
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   let replyTo
   try {
-    replyTo = await channel.messages.fetch(data.replyId)
+    replyTo = await channel.messages.fetch(data.replyId.toString())
   } catch (_e) {
     console.log('Message does not exist anymore.')
   }

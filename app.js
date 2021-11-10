@@ -46,12 +46,14 @@ client.login(DISCORD_KEY);
 
 app.post(`/${SIGNAL_BAR_SIG}`, async (req, res) => {
   const id = await sendSignal(req.body, "signal-bar-test");
-
+  console.log(req.body)
+  
   return res.status(200).json({ id });
 });
 
 app.post(`/${SIGNAL_BAR_UPD}`, (req, res) => {
   sendHitSignal(req.body, "signal-bar-test");
+  console.log(req.body)
 
   return res.status(200).end();
 });
