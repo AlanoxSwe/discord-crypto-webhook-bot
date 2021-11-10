@@ -261,7 +261,7 @@ const sendHitSignal = async (data, group) => {
     .setAuthor(`${data.crypto_ticker}`, logo)
     .setColor(0x1ee331)
     .setFooter('Click the reply for the original signal')
-    .addField('Targets Hit:', `${data.target_number}/4`, true)
+    .addField('Targets Hit:', `${data.target_number}/4 ${data.target_number === '4' && '- All targets hit!'}`, true)
     .addField('Current Profit:', `${data.percentage_profit}%`, true);
   
   (data.replyId && replyTo)
