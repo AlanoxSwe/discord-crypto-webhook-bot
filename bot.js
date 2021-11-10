@@ -4,6 +4,7 @@ const Axios = require('axios');
 const Jimp = require("jimp");
 const qs = require("qs");
 require('dotenv').config();
+require("./ExtendedMessage");
 
 const { IMGBB_KEY } = process.env;
 const jreadAsync = Jimp.read;
@@ -70,6 +71,15 @@ const renderRisk = (risk) => {
     default:
       return risk
   }
+}
+
+const slowSend = (channel, embed) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const sent = channel.send(embed)
+      resolve(sent);
+    }, 100)
+  })
 }
 
 // Notices
@@ -217,20 +227,30 @@ const sendSignal = async (data, group) => {
     .addField('💸 Buy Zone:', `\`< ${data.buy_zone}\``)
     .addField('🎯 Targets:', data.targets.map((target, index) => `**${index + 1}:\t\t**\`${target}\``))
   channel.send("<@&823279813945983046>");
-  setTimeout(() => {
-    channel.send(embed);
-  }, 100)
+  const sent = await slowSend(channel, embed)
+  return sent.id
 };
 
 const sendHitSignal = async (data, group) => {
   const logo = `https://agile-beyond-19073.herokuapp.com/${data.crypto_ticker}`
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
+  let replyTo
+  try {
+    replyTo = await channel.messages.fetch(data.replyId)
+  } catch (_e) {
+    console.log('Message does not exist anymore.')
+  }
   const embed = new Discord.MessageEmbed()
     .setTitle(`✅ Target ${data.target_number} for $${data.crypto_ticker} hit!`)
     .setAuthor(`${data.crypto_ticker}`, logo)
     .setColor(0x1ee331)
-    .addField('Current Profit:', `${data.percentage_profit}%`, true)
-  channel.send("<@&823279813945983046>");
+    .setFooter('Click the reply for the original signal')
+    .addField('Targets Hit:', `${data.target_number}/4`, true)
+    .addField('Current Profit:', `${data.percentage_profit}%`, true);
+  
+  (data.replyId && replyTo)
+    ? replyTo.inlineReply("<@&823279813945983046>")
+    : channel.send("<@&823279813945983046>")
   setTimeout(() => {
     channel.send(embed);
   }, 100)

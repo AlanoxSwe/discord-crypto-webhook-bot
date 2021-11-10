@@ -18,7 +18,7 @@ const {
 } = require('./bot');
 require('dotenv').config();
 
-const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_URL, SIGNAL_BAR_SIG, SIGNAL_BAR_UPD } = process.env;
+const { DISCORD_KEY, WEBHOOK_URL, SIGNAL_BAR_SIG, SIGNAL_BAR_UPD } = process.env;
 
 const app = express();
 
@@ -44,40 +44,14 @@ client.login(DISCORD_KEY);
 
 */
 
-// const getPercentFromMessage = (msg) => {
-//   const regex = /[0-9]+(.[0-9])+/i;
-//   const match = msg.match(regex)[0];
-//   return match ? match : null;
-// };
+app.post(`/${SIGNAL_BAR_SIG}`, async (req, res) => {
+  const id = await sendSignal(req.body, "signal-bar-test");
 
-// const getMinutesFromWindow = (window) => {
-//   const regex = /\d+/;
-//   const match = window.match(regex)[0];
-//   return match ? match : null;
-// };
-
-// app.post(`/${SIGNAL_URL}`, (req, res) => {
-//   const { hit } = req.body;
-
-//   if (hit) {
-//     sendHitSignal(req.body, "🍻signal-bar");
-//   } else {
-//     sendSignal(req.body, "🍻signal-bar");
-//   }
-
-//   return res.status(200).end();
-// });
-
-app.post(`/${SIGNAL_BAR_SIG}`, (req, res) => {
-  // sendSignal(req.body, "🍻signal-bar");
-  console.log(req.body)
-
-  return res.status(200).end();
+  return res.status(200).json({ id });
 });
 
 app.post(`/${SIGNAL_BAR_UPD}`, (req, res) => {
-  // sendHitSignal(req.body, "🍻signal-bar");
-  console.log(req.body)
+  sendHitSignal(req.body, "signal-bar-test");
 
   return res.status(200).end();
 });
