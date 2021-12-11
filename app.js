@@ -44,6 +44,10 @@ client.login(DISCORD_KEY);
 
 */
 
+app.get(`/uptime`, async (_req, res) => {
+  return res.status(200).end();
+});
+
 app.post(`/${SIGNAL_BAR_SIG}`, async (req, res) => {
   const id = await sendSignal(req.body, "🍻signal-bar");
 
