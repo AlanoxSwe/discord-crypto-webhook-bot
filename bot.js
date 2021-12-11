@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const Axios = require('axios');
 const Jimp = require("jimp");
 const qs = require("qs");
+const moment = require("moment");
 require('dotenv').config();
 require("./ExtendedMessage");
 
@@ -41,6 +42,21 @@ const upload = async (image) => {
   } catch (err) {
     console.error(err)
   }
+}
+
+const getIndex = async () => {
+  try {
+    const res = await Axios.get('https://api.alternative.me/fng/')
+    return res.data
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const renderIndexColor = (index) => {
+  if (index <= 30) return '0xeb7054'
+  if (index >= 31 && index <= 60) return '0xe7dc5b'
+  if (index >= 61) return '0x00c128'
 }
 
 const mergeImages = async (coin1, coin2) => {
@@ -97,10 +113,27 @@ const slowSend = (channel, embed) => {
   })
 }
 
+// Commands
+
+client.on('message', async (msg) => {
+  if (msg.content.toLowerCase() === '!fgi') {
+    const date = moment().format('YYYY-M-D')
+    const { data } = await getIndex()
+    const index = data[0].value
+    const string = data[0].value_classification
+    const embed = new Discord.MessageEmbed()
+    .setTitle(`Fear & Greed Index`)
+    .setColor(renderIndexColor(index))
+    .setDescription(`**${string}** (${index})`)
+    .setImage(`https://alternative.me/images/fng/crypto-fear-and-greed-index-${date}.png`)
+    msg.channel.send(embed)
+  }
+});
+
 // Notices
 
 const sendPercent = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.coin}/64x64`;
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.coin}`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle(`+${data.pc_chng}% in *${data.window} ${unit(data)}*`)
@@ -112,7 +145,7 @@ const sendPercent = async (data, group) => {
 };
 
 const sendPrepump = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.coin}/64x64`;
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.coin}`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle(`POSSIBLE PRE-PUMP: +${data.pc_chng}% in *${data.window} ${unit(data)}*`)
@@ -125,7 +158,7 @@ const sendPrepump = async (data, group) => {
 };
 
 const sendNewCoin = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.currency}/64x64`;
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.coin}`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle("Newly listed!")
@@ -147,7 +180,7 @@ const sendPeriodicPrice = (msg, group) => {
 // Alerts
 
 const sendNewCoinAlert = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.currency}/64x64`;
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.coin}`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle("Newly listed!")
@@ -159,7 +192,7 @@ const sendNewCoinAlert = async (data, group) => {
 };
 
 const sendPrepumpAlert = async (data, group) => {
-  const logo = `https://icons.bitbot.tools/api/${data.coin}/64x64`;
+  const logo = `https://agile-beyond-19073.herokuapp.com/${data.coin}`;
   const channel = client.channels.cache.find((chnl) => chnl.name === group);
   const embed = new Discord.MessageEmbed()
     .setTitle(`POSSIBLE PRE-PUMP: +${data.pc_chng}% in *${data.window} ${unit(data)}*`)
